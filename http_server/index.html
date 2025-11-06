@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CMUtube</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+</head>
+<body>
+    <header class="header">
+        <a href="#" class="logo">CMUtube</a>
+        <div class="search-container">
+            <input type="text" class="search-box" placeholder="Search">
+            <button class="search-btn">Search</button>
+        </div>
+    </header>
+    <div class="main">
+        <div class="vid-section">
+            <div class="vid-container">
+                <video id="player" controls autoplay muted width="854" height="480">
+                    Video tag not supported.
+                </video>
+            </div>
+            <div class="vid-info">
+                <h2 id="title">Test video</h2>
+                <div class="vid-meta">
+                    <span id="vid-views">15217 views</span>
+                    <span class="separator">•</span>
+                    <span id="vid-date">Today</span>
+                </div>
+            </div>
+            <div class="ctrl-info">
+                <div class="abr-status">
+                    <strong>ABR Status:</strong>
+                    <span id="currentBitrate">Bitrate Placeholder</span>
+                    <span id="bufferLevel">Buffer Level Placeholder</span>
+                    <span id="throughput">Throughput placeholder</span>
+                    <span id="ttff">TTFF placeholder</span>
+                    <span id="rebufferCount">Rebuffer Count placeholder</span>
+                    <span id="averageQuality">Average Quality placeholder</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="customAbr.js"></script>
+    <script src="player.js"></script>
+</body>
+</html>

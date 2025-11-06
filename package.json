@@ -1,0 +1,20 @@
+{
+  "name": "abr-test-runner",
+  "version": "1.0.0",
+  "description": "CLI test runner",
+  "main": "test-runner.js",
+  "bin": {
+    "abr-test": "./test-runner.js"
+  },
+  "scripts": {
+    "test": "node test-runner.js",
+    "test:single": "node test-runner.js",
+    "install-deps": "npm install"
+  },
+  "dependencies": {
+    "puppeteer": "^24.29.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
