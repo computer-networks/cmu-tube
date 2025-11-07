@@ -30,9 +30,9 @@ Any change made in this directory on either the host or the container will be re
 If you prefer to download the dataset manually, run:
 ```bash
 cd cmu-tube/source/http_server
-wget https://cmu.box.com/shared/static/wkawkp9ilijmokduf3vui2jin6s6o7ta.tar
-tar -xvf y3c0t7jav94p08oo1ziz7wjwfz0145fp.tar
-rm y3c0t7jav94p08oo1ziz7wjwfz0145fp.tar
+wget https://cmu.box.com/shared/static/wkawkp9ilijmokduf3vui2jin6s6o7ta.tar -O video.tar
+tar -xvf video.tar
+rm video.tar
 ```
 Normally, you **do not need to** manually download the video data — the Docker startup script handles this automatically.
 
