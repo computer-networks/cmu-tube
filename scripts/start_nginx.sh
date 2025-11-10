@@ -55,6 +55,13 @@ else
   cd /15441-project3
 fi
 
+if [ ! -d "/15441-project3/cmu-tube/node_modules" ]; then
+    echo '[COPY] node_modules not found, copying from /tmp/cmu-tube'
+    cp -r /tmp/cmu-tube/node_modules /15441-project3/cmu-tube/
+else
+    echo '[SKIP] node_modules already exists'
+fi
+
 # Start nginx using your mapped config
 echo "[startup] Starting nginx with custom config..."
 nginx -c /15441-project3/cmu-tube/scripts/nginx.conf

@@ -38,8 +38,7 @@ RUN bash -c ". $NVM_DIR/nvm.sh && \
     nvm install 20 && nvm use 20 && \
     node -v && npm -v && \
     npm install && \
-    npx puppeteer browsers install chrome && \
-    rm -rf /tmp/cmu-tube"
+    npx puppeteer browsers install chrome"
 
 # ----------------------------
 # Detect architecture and conditionally install Chrome + Toxiproxy
