@@ -272,6 +272,15 @@ class ABRTestRunner {
                 { timeout: 30000 },
             );
 
+            await page.evaluate((durationSec) => {
+                if (window.videoPlayer) {
+                    window.videoPlayer.testDurationMs = durationSec * 1000;
+                    console.log(`[⚠️Injected] testDurationMs set to ${window.videoPlayer.testDurationMs} ms`);
+                } else {
+                    console.warn("⚠️ window.videoPlayer not ready when setting testDurationMs");
+                }
+            }, duration);
+
             await new Promise((resolve) => setTimeout(resolve, this.duration * 1000));
 
             const metrics = await page.evaluate(() => {

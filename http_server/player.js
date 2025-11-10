@@ -2,10 +2,11 @@
 const MANIFEST_URL = `http://localhost:${window.location.port}/data/manifest.mpd`
 
 class VideoPlayer {
-    constructor() {
+    constructor(testDurationMs = 60000) {
         this.player = null;
         this.customAbr = null;
         this.currentQualityIndex = -1;
+        this.testDurationMs = testDurationMs; // total test duration in ms
 
         // NOTE: Do not modify this object. The testing framework relies on it.
         this.evalMetrics = {
@@ -124,16 +125,33 @@ class VideoPlayer {
     }
 
     getAverageBitrate() {
-        if (this.evalMetrics.bitrateHistory.length === 0) {
-            return 0;
+        const history = this.evalMetrics.bitrateHistory;
+        if (history.length === 0) return 0;
+
+        history.sort((a, b) => a.timestamp - b.timestamp);
+
+        let weightedSum = 0;
+        let totalDuration = 0;
+
+        for (let i = 0; i < history.length; i++) {
+            const cur = history[i];
+            const next = history[i + 1];
+            let durationMs;
+
+            if (next) {
+                durationMs = next.timestamp - cur.timestamp;
+            } else {
+                const startMs = history[0].timestamp;
+                const totalTestDurationMs = this.testDurationMs || 60000;
+                durationMs = totalTestDurationMs - (cur.timestamp - startMs);
+            }
+
+            if (durationMs < 0) durationMs = 0;
+            weightedSum += cur.bitrate * durationMs;
+            totalDuration += durationMs;
         }
 
-        let totalBitrate = 0;
-        for (var entry of this.evalMetrics.bitrateHistory) {
-            totalBitrate += entry.bitrate;
-        }
-
-        return Math.round(totalBitrate / this.evalMetrics.bitrateHistory.length);
+        return Math.round(weightedSum / totalDuration);
     }
 
     getCurrentBufferLevel() {
