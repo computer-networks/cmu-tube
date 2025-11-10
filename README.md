@@ -65,7 +65,7 @@ These traces simulate both **steady** and **dynamic** network conditions.
 
 | Trace Name           | Bandwidth | Latency | Description                         |
 | -------------------- | --------- | ------- | ----------------------------------- |
-| `200kbit_200ms_1min` | 200 kbps  | 200 ms  | Ultra-low bandwidth, high latency   |
+| `56kbit_100ms_1min`  | 56 kbps   | 100 ms  | Ultra-low bandwidth, medium latency |
 | `500kbit_100ms_1min` | 500 kbps  | 100 ms  | Low bandwidth, medium latency       |
 | `3mbit_100ms_1min`   | 3 Mbps    | 100 ms  | Medium bandwidth, medium latency    |
 | `10mbit_100ms_1min`  | 10 Mbps   | 100 ms  | High bandwidth, medium latency      |
@@ -75,7 +75,7 @@ These traces simulate both **steady** and **dynamic** network conditions.
 | Trace Name                  | Bandwidth Behavior                    | Latency    | Description                  |
 | --------------------------- | ------------------------------------- | ---------- | ---------------------------- |
 | `500kbit_then_unrestricted` | 500 kbps → unrestricted (at 30 s)     | 100 ms     | Starts poor, then improves   |
-| `unrestricted_then_1mbit`   | Unrestricted → 1 Mbps (at 30 s)       | 100 ms     | Starts good, then degrades   |
+| `4mbit_then_56kbit`         | 4 Mbps → 56 kbps (at 10 s)            | 100 ms     | Starts good, then degrades   |
 | `oscillate_1mbit_start`     | Alternates 1 ↔ 5 Mbps (starts 1 Mbps) | 100 ms     | Unstable bandwidth pattern   |
 | `oscillate_5mbit_start`     | Alternates 1 ↔ 5 Mbps (starts 5 Mbps) | 100 ms     | Unstable bandwidth pattern   |
 | `6mbit_50ms_jitter`         | 6 Mbps                                | 50 ± 25 ms | Unstable latency with jitter |

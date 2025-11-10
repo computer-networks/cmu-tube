@@ -48,7 +48,7 @@ class VideoPlayer {
         });
 
         this.player.on(dashjs.MediaPlayer.events.BUFFER_EMPTY, function (e) {
-            console.log('Buffer empty!', e.mediaType);
+            console.warn("Buffer empty!");
         });
 
         this.player.on(dashjs.MediaPlayer.events.PLAYBACK_WAITING, () => {
@@ -62,6 +62,7 @@ class VideoPlayer {
 
             if (e.mediaType === 'video') {
                 const newQualityBps = e.newRepresentation.bandwidth;
+                // console.log('(Demo event listener) Quality changed to:', newQualityBps);
 
                 if (this.evalMetrics.lastQuality !== null && this.evalMetrics.lastQuality !== newQualityBps) {
                     this.evalMetrics.numQualitySwitches++;

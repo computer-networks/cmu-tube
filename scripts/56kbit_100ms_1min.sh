@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "=== (200kbit, 200ms, 1min) profile ==="
+echo "=== (56kbit, 100ms, 1min) profile ==="
 
 # --- (1) Kill existing toxiproxy-server processes ---
 echo "[CLEANUP] Killing any existing toxiproxy-server processes..."
@@ -26,10 +26,10 @@ toxiproxy-cli create --listen 0.0.0.0:9006 --upstream localhost:15441 video || {
 
 # --- (4) Apply toxics ---
 echo "[SETUP] Applying latency and bandwidth toxics..."
-toxiproxy-cli toxic add --upstream   --type latency   --attribute latency=200 video
-toxiproxy-cli toxic add --downstream --type latency   --attribute latency=200 video
-toxiproxy-cli toxic add --upstream   --type bandwidth --attribute rate=25 video 
-toxiproxy-cli toxic add --downstream --type bandwidth --attribute rate=25 video 
+toxiproxy-cli toxic add --upstream   --type latency   --attribute latency=100 video
+toxiproxy-cli toxic add --downstream --type latency   --attribute latency=100 video
+toxiproxy-cli toxic add --upstream   --type bandwidth --attribute rate=7 video 
+toxiproxy-cli toxic add --downstream --type bandwidth --attribute rate=7 video 
 
 # --- (5) Print configuration ---
 echo "[INFO] Active proxies:"
@@ -46,4 +46,4 @@ sleep 65
 echo "[CLEANUP] Removing proxy..."
 toxiproxy-cli delete video || true
 pkill -9 -f toxiproxy || true
-echo "=== (200kbit, 200ms, 1min) finished ==="
+echo "=== (56kbit, 100ms, 1min) finished ==="

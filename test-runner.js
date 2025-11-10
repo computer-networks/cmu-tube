@@ -46,9 +46,9 @@ class ABRTestRunner {
                 description: "Bandwidth improvement",
             },
             {
-                name: "200kbit-200ms-1min",
+                name: "56kbit-100ms-1min",
                 port: 9006,
-                script: "200kbit_200ms_1min.sh",
+                script: "56kbit_100ms_1min.sh",
                 weight: 1.0,
                 description: "Very low bandwidth",
             },
@@ -67,9 +67,9 @@ class ABRTestRunner {
                 description: "Variable bandwidth starting high",
             },
             {
-                name: "unrestricted-then-1mbit",
+                name: "4mbit-then-200kbit",
                 port: 9009,
-                script: "unrestricted_then_1mbit.sh",
+                script: "4mbit_then_200kbit.sh",
                 weight: 1.5,
                 description: "Bandwidth degradation",
             },
