@@ -33,7 +33,7 @@ RUN echo 'export NVM_DIR="$HOME/.nvm"' >> /root/.bashrc && \
 # Clone cmu-tube repo and install dependencies
 # ----------------------------
 RUN bash -c ". $NVM_DIR/nvm.sh && \
-    git clone https://github.com/A-Dying-Pig/cmu-tube.git /tmp/cmu-tube && \
+    git clone https://github.com/computer-networks/cmu-tube.git /tmp/cmu-tube && \
     cd /tmp/cmu-tube && \
     nvm install 20 && nvm use 20 && \
     node -v && npm -v && \
