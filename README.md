@@ -10,7 +10,7 @@ This README provides a quick guide to help you set up your development and testi
 
 We will use **Docker** to provide a consistent environment for development and testing.  
 If you don’t already have Docker installed, follow the [official installation guide](https://docs.docker.com/engine/install/).
-For development, we recommend testing on an x86-based Ubuntu machine.
+The development script has been tested on both x86-based Ubuntu machines and ARM-based Apple M2 systems.
 
 ### Build the Docker Image
 Run the following command in the project root directory:
@@ -56,7 +56,11 @@ Run test under all network traces using:
 node test-runner.js --duration <seconds>
 ```
 
-### Network traces
+### View QoE Metrics
+After running `node test-runner.js`, a file named `test-results.json` will be generated.
+This file contains the overall QoE score, detailed performance metrics, and the complete bitrate history for the test run.
+
+### Network Traces
 To evaluate your adaptive bitrate (ABR) algorithm under diverse network conditions, we provide a set of synthetic and real-world traces.
 All traces can be found in the `scripts/` directory.
 
@@ -130,10 +134,7 @@ When you are satisfied with your improved algorithm:
 ## 🌐 6. (Optional) Watch CMU-Tube in Your Browser
 
 This section lets you watch CMU-Tube directly in your browser instead of through the automated tests.
-It requires a GUI environment and a web browser (we tested on macOS M2 + Chrome).
-
-💡 Note: ARM-based CPUs are fine for this part because we use your host browser to access video data.
-The automated test suite, however, still requires an x86 CPU since it depends on google-chrome.deb, which is not supported on ARM.
+It requires a GUI environment and a web browser (we tested on MacOS M2).
 
 #### 🎬 Demo: CMU-Tube
 
@@ -164,7 +165,7 @@ Example:
 ```bash
 ./enable_network_for_browser.sh 10mbit-100ms-1min
 ```
-This sets up the same network conditions used by node test-runner.js, but instead of running headless Chrome inside Docker, you’ll use **your host browser** as the video client.
+This sets up the same network conditions used by node test-runner.js, but instead of running headless browser inside Docker, you’ll use **your host browser** as the video client.
 
 Next, open your browser and visit:
 ```

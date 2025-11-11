@@ -55,7 +55,10 @@ RUN ARCH=$(uname -m) && echo "Detected architecture: $ARCH" && \
         wget -q https://github.com/Shopify/toxiproxy/releases/download/v2.12.0/toxiproxy-cli-linux-amd64 -O /usr/local/bin/toxiproxy-cli && \
         chmod +x /usr/local/bin/toxiproxy-server /usr/local/bin/toxiproxy-cli; \
     elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then \
-        echo "Skipping Chrome installation for ARM. TODO: use Chromium for ARM processors." && \
+        echo "Skipping Chrome installation for ARM. Use Chromium for ARM processors." && \
+        add-apt-repository ppa:xtradeb/apps -y && \
+        apt update && \
+        apt install chromium -y && \
         echo "Installing Toxiproxy (ARM64)..." && \
         wget -q https://github.com/Shopify/toxiproxy/releases/download/v2.12.0/toxiproxy-server-linux-arm64 -O /usr/local/bin/toxiproxy-server && \
         wget -q https://github.com/Shopify/toxiproxy/releases/download/v2.12.0/toxiproxy-cli-linux-arm64 -O /usr/local/bin/toxiproxy-cli && \

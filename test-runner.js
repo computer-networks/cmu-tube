@@ -233,8 +233,14 @@ class ABRTestRunner {
 
         const userDataDir = path.join(os.tmpdir(), `chrome-${Date.now()}`);
 
+        let browserPath = "/usr/bin/google-chrome";
+        if (!fs.existsSync(browserPath)) {
+            console.warn("/usr/bin/google-chrome not found, falling back to /usr/bin/chromium");
+            browserPath = "/usr/bin/chromium";
+        }
+        
         const browser = await puppeteer.launch({
-            executablePath: "/usr/bin/google-chrome",
+            executablePath: browserPath,
             headless: this.visualMode ? false : "new",
             args: [
                 `--user-data-dir=${userDataDir}`,
