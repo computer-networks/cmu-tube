@@ -10,7 +10,7 @@ This README provides a quick guide to help you set up your development and testi
 
 We will use **Docker** to provide a consistent environment for development and testing.  
 If you don’t already have Docker installed, follow the [official installation guide](https://docs.docker.com/engine/install/).
-The development script has been tested on both x86-based Ubuntu machines and ARM-based Apple M2 systems.
+The development script has been verified on x86 Ubuntu systems, ARM-based Apple M2 devices, and Windows WSL environments.
 
 ### Build the Docker Image
 Run the following command in the project root directory:
