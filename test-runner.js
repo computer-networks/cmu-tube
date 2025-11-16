@@ -435,8 +435,8 @@ class ABRTestRunner {
                 100 * bitrateMbps       // reward for quality
                 - 10.0 * stallTime         // stall time penalty (s)
                 - 3.0 * numRebuffers      // each rebuffer hurts a lot
-                - 1 * (timeToFirstFrame / 1000); // convert ms→s, mild penalty
-                - 0.1 * numQualitySwitches// small annoyance
+                - 1 * (timeToFirstFrame / 1000) // convert ms→s, mild penalty
+                - 0.1 * numQualitySwitches;  // small annoyance
                 
             // Store results
             formattedResults[testName] = {
