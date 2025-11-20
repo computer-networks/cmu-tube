@@ -27,6 +27,7 @@ class VideoPlayer {
         this.videoElement = document.getElementById('player');
         this.player = dashjs.MediaPlayer().create();
 
+        this.setupCustomAbr();
         this.player.addABRCustomRule('qualitySwitchRules', 'CustomBitrateRule', CustomBitrateRule);
 
         this.setupEventListeners();
@@ -35,7 +36,6 @@ class VideoPlayer {
 
     setupEventListeners() {
         this.player.on(dashjs.MediaPlayer.events.STREAM_INITIALIZED, () => {
-            this.setupCustomAbr();
             this.evalMetrics.startTime = performance.now();
         });
 
