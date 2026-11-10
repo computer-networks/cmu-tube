@@ -68,15 +68,30 @@ function CustomBitrateRule() {
     }
 
     /**
-     * You may find this helpful to implement for Part 2 if you would also like 
-     * to consider throughput for your custom ABR
-     * 
-     * See ThroughputController example in the writeup for tips on how to
-     * implement. 
-     * @returns Current throughput
+     * Helper function that returns dash.js's smoothed throughput estimate for video, in kbps.
+     * Pass safe = true for the conservative estimate (scaled down by a safety factor).
+     * dash.js computes throughput as bytes / download time, excluding latency, so it can read higher than the link rate.
+     * @param ruleCtx - RulesContext passed to getSwitchRequest
+     * @param safe - use getSafeAverageThroughput instead of getAverageThroughput
+     * @returns throughput in kbps, or null before the first segment has downloaded
      */
-    function getNetworkThroughput() {
-        return 0;
+    function getThroughput(ruleCtx, safe = false) {
+        const throughputController = ruleCtx.getThroughputController();
+        const kbps = safe
+            ? throughputController.getSafeAverageThroughput('video')
+            : throughputController.getAverageThroughput('video');
+        return (kbps === null || isNaN(kbps)) ? null : kbps;
+    }
+
+    /**
+     * Returns dash.js's average request latency for video (time from sending
+     * a segment request to receiving its first byte), in ms.
+     * @param ruleCtx - RulesContext passed to getSwitchRequest
+     * @returns latency in ms, or null before the first segment has downloaded
+     */
+    function getLatency(ruleCtx) {
+        const latencyMs = ruleCtx.getThroughputController().getAverageLatency('video');
+        return (latencyMs === null || isNaN(latencyMs)) ? null : latencyMs;
     }
 
     instance = {

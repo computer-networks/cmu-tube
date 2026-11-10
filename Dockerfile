@@ -21,7 +21,7 @@ RUN apt-get update && \
 # ----------------------------
 RUN mkdir -p "$NVM_DIR" && \
     curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash && \
-    bash -c ". $NVM_DIR/nvm.sh && nvm install 20 && nvm alias default 20 && npm install -g npm@latest"
+    bash -c ". $NVM_DIR/nvm.sh && nvm install 20 && nvm alias default 20 && npm install -g npm@10"
 
 # Make NVM available in all shells
 ENV NODE_VERSION=20

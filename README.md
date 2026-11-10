@@ -6,7 +6,7 @@ This README provides a quick guide to help you set up your development and testi
 
 ---
 
-## 🧩 1. Setting Up the Development Environment
+## 1. Setting Up the Development Environment
 
 We will use **Docker** to provide a consistent environment for development and testing.  
 If you don’t already have Docker installed, follow the [official installation guide](https://docs.docker.com/engine/install/).
@@ -27,7 +27,7 @@ This command mounts your host directory `/path/to/cmu-tube/on/host/machine` to `
 Any change made in this directory on either the host or the container will be reflected on both sides.
 `/cmu-tube/http_server/data` folder stores the video dataset. If it is empty or missing, the startup script will automatically download the required dataset.
 
-## 🎞️ 2. Manually Downloading Video Data (Optional)
+## 2. Manually Downloading Video Data (Optional)
 If you prefer to download the dataset manually, run:
 ```bash
 cd cmu-tube/source/http_server
@@ -37,7 +37,7 @@ rm video.tar
 ```
 Normally, you **do not need to** manually download the video data — the Docker startup script handles this automatically.
 
-## 🧪 3. Running the Tests
+## 3. Running the Tests
 Once your container is ready, navigate to the cmu-tube directory:
 ```bash
 cd /15441-project3/cmu-tube
@@ -64,36 +64,36 @@ This file contains the overall QoE score, detailed performance metrics, and the 
 To evaluate your adaptive bitrate (ABR) algorithm under diverse network conditions, we provide a set of synthetic and real-world traces.
 All traces can be found in the `scripts/` directory.
 
-#### 🧪 Synthetic Traces
+#### Synthetic Traces
 These traces simulate both **steady** and **dynamic** network conditions.
 ##### Steady Conditions
 
 | Trace Name           | Bandwidth | Latency | Description                         |
 | -------------------- | --------- | ------- | ----------------------------------- |
-| `56kbit_100ms_1min`  | 56 kbps   | 100 ms  | Ultra-low bandwidth, medium latency |
-| `500kbit_100ms_1min` | 500 kbps  | 100 ms  | Low bandwidth, medium latency       |
-| `3mbit_100ms_1min`   | 3 Mbps    | 100 ms  | Medium bandwidth, medium latency    |
-| `10mbit_100ms_1min`  | 10 Mbps   | 100 ms  | High bandwidth, medium latency      |
+| `56kbit-100ms-1min`  | 56 kbps   | 100 ms  | Ultra-low bandwidth, medium latency |
+| `500kbit-100ms-1min` | 500 kbps  | 100 ms  | Low bandwidth, medium latency       |
+| `3mbit-100ms-1min`   | 3 Mbps    | 100 ms  | Medium bandwidth, medium latency    |
+| `10mbit-100ms-1min`  | 10 Mbps   | 100 ms  | High bandwidth, medium latency      |
 | `unrestricted`       | Localhost | N/A     | No bandwidth or latency constraints |
 
 ##### Dynamic Conditions
 | Trace Name                  | Bandwidth Behavior                    | Latency    | Description                  |
 | --------------------------- | ------------------------------------- | ---------- | ---------------------------- |
-| `500kbit_then_unrestricted` | 500 kbps → unrestricted (at 30 s)     | 100 ms     | Starts poor, then improves   |
-| `4mbit_then_56kbit`         | 4 Mbps → 56 kbps (at 10 s)            | 100 ms     | Starts good, then degrades   |
-| `oscillate_1mbit_start`     | Alternates 1 ↔ 5 Mbps (starts 1 Mbps) | 100 ms     | Unstable bandwidth pattern   |
-| `oscillate_5mbit_start`     | Alternates 1 ↔ 5 Mbps (starts 5 Mbps) | 100 ms     | Unstable bandwidth pattern   |
-| `6mbit_50ms_jitter`         | 6 Mbps                                | 50 ± 25 ms | Unstable latency with jitter |
+| `500kbit-then-unrestricted` | 500 kbps → unrestricted (at 30 s)     | 100 ms     | Starts poor, then improves   |
+| `4mbit-then-56kbit`         | 4 Mbps → 56 kbps (at 10 s)            | 100 ms     | Starts good, then degrades   |
+| `oscillate-1mbit-start`     | Alternates 1 ↔ 5 Mbps (starts 1 Mbps) | 100 ms     | Unstable bandwidth pattern   |
+| `oscillate-5mbit-start`     | Alternates 1 ↔ 5 Mbps (starts 5 Mbps) | 100 ms     | Unstable bandwidth pattern   |
+| `6mbit-50ms-jitter`         | 6 Mbps                                | 50 ± 25 ms | Unstable latency with jitter |
 
-#### 🌍 Real-World Traces
+#### Real-World Traces
 These traces are derived from real-world [measurements](https://skulddata.cs.umass.edu/traces/mmsys/2013/pathbandwidth/) collected by the UMass MMSys project.
 | Trace Name                   | Scenario  | Description                                                   |
 | ---------------------------- | --------- | ------------------------------------------------------------- |
-| `jernbanetorget_ljabru_tram` | Tram ride | Bandwidth along a tram route from **Jernbanetorget → Ljabru** |
-| `snaroya_smestad_car`        | Car drive | Bandwidth during a drive from **Snaroya → Smestad**           |
+| `jernbanetorget-ljabru-tram` | Tram ride | Bandwidth along a tram route from **Jernbanetorget → Ljabru** |
+| `snaroya-smestad-car`        | Car drive | Bandwidth during a drive from **Snaroya → Smestad**           |
 
 
-## ⚙️ 4. Implementing and Testing Your ABR Algorithm
+## 4. Implementing and Testing Your ABR Algorithm
 You will implement your adaptive bitrate (ABR) logic in the following files:
 
 * `http_server/customAbr.js`
@@ -120,7 +120,7 @@ In the second part of the project, you should extend and improve the BBA-0 algor
 Once your improved algorithm is ready, use `test-runner.js` to evaluate it and verify the results in `test-results.json`.
 
 
-## 🏁 5. Submitting to Gradescope
+## 5. Submitting to Gradescope
 When you are satisfied with your improved algorithm:
 
 * Upload only the following files to Gradescope:
@@ -131,12 +131,12 @@ When you are satisfied with your improved algorithm:
 * 🏆 A live leaderboard will show your ranking based on the overall QoE score — the top performer wins a 🎁 special prize!
 
 
-## 🌐 6. (Optional) Watch CMU-Tube in Your Browser
+## 6. (Optional) Watch CMU-Tube in Your Browser
 
 This section lets you watch CMU-Tube directly in your browser instead of through the automated tests.
 It requires a GUI environment and a web browser (we tested on MacOS M2).
 
-#### 🎬 Demo: CMU-Tube
+#### Demo: CMU-Tube
 
 ![CMU-Tube Demo](./http_server/cmu-tube-demo.gif)
 
