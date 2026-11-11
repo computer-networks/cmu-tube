@@ -99,7 +99,7 @@ You will implement your adaptive bitrate (ABR) logic in the following files:
 * `http_server/customAbr.js`
 * `http_server/player.js`
 
-Use `test-runner.js` to test your implementation.
+Use `test-runner.js` to test your implementation. You may need to implement additional customAbr*.js files for later parts of the lab. 
 
 Each test generates a `test-results.json` file containing various Quality of Experience (QoE) metrics, such as:
 
@@ -124,8 +124,9 @@ Once your improved algorithm is ready, use `test-runner.js` to evaluate it and v
 When you are satisfied with your improved algorithm:
 
 * Upload only the following files to Gradescope:
-    * `customAbr.js`
+    * `customAbrWithLatencyAndThroughput.js`
     * `player.js`
+    * `group.txt`
 
 * Gradescope will automatically run your code under all the network traces for 60 seconds.
 * 🏆 A live leaderboard will show your ranking based on the overall QoE score — the top performer wins a 🎁 special prize!
