@@ -94,15 +94,10 @@ class ABRTestRunner {
             }
         ];
 
-
         this.results = {};
         this.scores = {};
     }
 
-    // Test cases should realistically adapt based on the manifest file
-    // The `qualityExpectation` used to tag a test with the appropriate
-    // expectation
-    // TODO: Open to suggestions on these target values
     getNetworkCapability(testName) {
         const capabilities = {
             unrestricted: {
@@ -238,7 +233,7 @@ class ABRTestRunner {
             console.warn("/usr/bin/google-chrome not found, falling back to /usr/bin/chromium");
             browserPath = "/usr/bin/chromium";
         }
-        
+
         const browser = await puppeteer.launch({
             executablePath: browserPath,
             headless: this.visualMode ? false : "new",
@@ -253,7 +248,7 @@ class ABRTestRunner {
         page.on("console", (msg) =>
             console.log("Browser console:", msg.text()),
         );
-        
+
         page.on('response', async (response) => {
             if (response.status() >= 400) {
                 console.log('[HTTP]', response.status(), response.url());
@@ -311,7 +306,7 @@ class ABRTestRunner {
                     numRebuffers: evalMetrics.numRebuffers,
                     numQualitySwitches: evalMetrics.numQualitySwitches,
                     averageBitrate: avgBitrate,
-                    duration: duration,  // <-- renamed from currentTime
+                    duration: duration,
                     timestamp: new Date().toISOString(),
                     bitrateHistory: evalMetrics.bitrateHistory || [],
                 };
@@ -333,75 +328,10 @@ class ABRTestRunner {
         }
     }
 
-    // startDockerContainers() {
-    //     try {
-    //         execSync("sudo docker-compose up -d", { stdio: "inherit" });
-    //         this.containersStarted = true;
-    //     } catch (error) {
-    //         throw new Error("cannot start docker containers");
-    //     }
-    // }
-
-    // async waitForContainers() {
-    //     console.log("Waiting for containers");
-    //     await new Promise((resolve) => setTimeout(resolve, 10000));
-
-    //     for (const config of this.testConfigs) {
-    //         let retries = 5;
-    //         let isReady = false;
-
-    //         while (retries > 0 && !isReady) {
-    //             try {
-    //                 const result = execSync(
-    //                     `curl -f -s http://localhost:${config.healthCheckPort || config.port}`,
-    //                     {
-    //                         timeout: 10000,
-    //                         encoding: "utf8",
-    //                     },
-    //                 );
-    //                 isReady = true;
-    //             } catch (error) {
-    //                 retries--;
-    //                 if (retries > 0) {
-    //                     await new Promise((resolve) =>
-    //                         setTimeout(resolve, 5000),
-    //                     );
-    //                 }
-    //             }
-    //         }
-
-    //         if (!isReady) {
-    //             throw new Error(`Container on port ${config.port} not ready`);
-    //         }
-    //     }
-    // }
-
-    // startNetworkScript(containerName, scriptName) {
-    //     return spawn(
-    //         "docker",
-    //         ["exec", containerName, "bash", `/scripts/${scriptName}`],
-    //         { stdio: "inherit" },
-    //     );
-    // }
-
-    // cleanupContainers() {
-    //     if (!this.containersStarted) {
-    //         return;
-    //     }
-    //     try {
-    //         execSync("sudo docker-compose down", { stdio: "inherit" });
-    //         this.containersStarted = false;
-    //     } catch (error) {
-    //         console.warn("Error stopping containers");
-    //     }
-    // }
-
     startNetworkScript(scriptName) {
-        // Run the network profile script directly on host
         console.log(`Starting network script: ${scriptName}`);
         return spawn("bash", [path.join(__dirname, "scripts", scriptName)], { stdio: "inherit" });
     }
-
 
     saveResults() {
         const resultsFile = "test-results.json";
@@ -419,7 +349,6 @@ class ABRTestRunner {
                 continue;
             }
 
-            // Extract key metrics with safe defaults
             const averageBitrate = metrics.averageBitrate || 0;
             const numRebuffers = metrics.numRebuffers || 0;
             const numQualitySwitches = metrics.numQualitySwitches || 0;
@@ -427,21 +356,38 @@ class ABRTestRunner {
             const duration = metrics.duration || 0;
             const stallTime = Math.max(0, this.duration - duration);
 
-            // --- Compute simplified QoE metric ---
             const bitrateMbps = averageBitrate / 1e6;
+            const ttff_s = timeToFirstFrame / 1000;
 
-            // Weighted QoE model (all penalties in seconds or counts)
-            const QoE_score =
-                100 * bitrateMbps       // reward for quality
-                - 10.0 * stallTime         // stall time penalty (s)
-                - 3.0 * numRebuffers      // each rebuffer hurts a lot
-                - 1 * (timeToFirstFrame / 1000) // convert ms→s, mild penalty
-                - 0.1 * numQualitySwitches;  // small annoyance
-                
-            // Store results
+            // TikTok: short-form video — prioritizes TTFF and rebuffer avoidance
+            const QoE_TikTok =
+                50  * bitrateMbps
+                - 10.0 * stallTime
+                - 5.0  * numRebuffers
+                - 10.0 * ttff_s
+                - 0.5  * numQualitySwitches;
+
+            // Netflix: long-form video — prioritizes high bitrate, penalizes stalls
+            const QoE_Netflix =
+                200 * bitrateMbps
+                - 15.0 * stallTime
+                - 5.0  * numRebuffers
+                - 0.5  * ttff_s
+                - 2.0  * numQualitySwitches;
+
+            // Zoom: video conferencing — prioritizes smoothness, penalizes switches and stalls
+            const QoE_Zoom =
+                40  * bitrateMbps
+                - 20.0 * stallTime
+                - 8.0  * numRebuffers
+                - 3.0  * ttff_s
+                - 5.0  * numQualitySwitches;
+
             formattedResults[testName] = {
                 network: testName,
-                QoE_score: QoE_score,
+                QoE_TikTok: QoE_TikTok,
+                QoE_Netflix: QoE_Netflix,
+                QoE_Zoom: QoE_Zoom,
                 metrics: {
                     averageBitrate_bps: averageBitrate,
                     numRebuffers: numRebuffers,
@@ -452,8 +398,7 @@ class ABRTestRunner {
                     bitrateHistory: metrics.bitrateHistory || []
                 }
             };
-            console.log(`[RESULT] ${testName}: QoE=${QoE_score.toFixed(2)}, bitrate=${averageBitrate.toFixed(0)}, rebuffer=${numRebuffers}, switches=${numQualitySwitches}, TTF=${timeToFirstFrame}, Stall Time=${stallTime}`);
-
+            console.log(`[RESULT] ${testName}: QoE_TikTok=${QoE_TikTok.toFixed(2)}, QoE_Netflix=${QoE_Netflix.toFixed(2)}, QoE_Zoom=${QoE_Zoom.toFixed(2)}, bitrate=${averageBitrate.toFixed(0)}, rebuffer=${numRebuffers}, switches=${numQualitySwitches}, TTF=${timeToFirstFrame}, StallTime=${stallTime}`);
         }
 
         const resultsData = {
@@ -462,7 +407,7 @@ class ABRTestRunner {
         };
 
         fs.writeFileSync(resultsFile, JSON.stringify(resultsData, null, 2));
-        console.log(`✅ Saved simplified QoE results to ${resultsFile}`);
+        console.log(`✅ Saved QoE results to ${resultsFile}`);
     }
 }
 
@@ -470,7 +415,7 @@ async function main() {
     const args = process.argv.slice(2);
     let visualMode = false;
     let benchMode = false;
-    let duration = 60; 
+    let duration = 60;
     let filteredArgs = [];
 
     for (let i = 0; i < args.length; i++) {
@@ -481,7 +426,7 @@ async function main() {
         } else if (args[i] === "--duration") {
             duration = parseInt(args[i + 1], 10) || 60;
             i++;
-        }else {
+        } else {
             filteredArgs.push(args[i]);
         }
     }
@@ -496,11 +441,9 @@ async function main() {
     process.on("uncaughtException", handleFatalError);
     process.on("unhandledRejection", handleFatalError);
 
-
     const cleanShutdown = () => {
         console.log("[SHUTDOWN] Caught termination signal. Cleaning up...");
         try { runner.stopToxiproxy(); } catch {}
-        // runner.cleanupContainers();
         process.exit(0);
     };
 
