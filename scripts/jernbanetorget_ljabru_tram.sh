@@ -55,7 +55,7 @@ tail -n +2 "$CSV_FILE" | while IFS=',' read -r ts kbps; do
 
     sleep 1
 
-    ((count++))
+    count=$((count + 1))
     if [[ $count -ge $MAX_STEPS ]]; then
         echo "[INFO] Reached ${MAX_STEPS} updates — stopping early."
         break
