@@ -43,24 +43,37 @@ echo "[INFO] Format: timestamp,linkrate_kbps"
 # --- (6) Iterate CSV lines and apply rates ---
 MAX_STEPS=65
 count=0
+prev_ts=""
 
 tail -n +2 "$CSV_FILE" | while IFS=',' read -r ts kbps; do
+# Process substitution (not a pipe) keeps the loop in the main shell;
+# `|| [[ -n $kbps ]]` handles a final line without a trailing newline.
+while IFS=',' read -r ts kbps || [[ -n "$kbps" ]]; do
+    kbps="${kbps//$'\r'/}"
     if [[ -z "$kbps" ]]; then continue; fi
     rate_kBps=$(awk -v k="$kbps" 'BEGIN { printf "%d", k/8 }')
+
+    # Hold the previous rate for the real gap between timestamps (trace has gaps).
+    if [[ -n "$prev_ts" ]]; then
+        gap=$(awk -v a="$prev_ts" -v b="$ts" 'BEGIN { d = b - a; printf "%s", (d > 0 ? d : 0) }')
+        sleep "$gap"
+    fi
+    prev_ts="$ts"
+
+    # Toxiproxy treats rate<=0 as UNLIMITED, so clamp to at least 1 KB/s.
+    rate_kBps=$(awk -v k="$kbps" 'BEGIN { r = int(k/8); if (r < 1) r = 1; printf "%d", r }')
     echo "[UPDATE] t=${ts}s  linkrate=${kbps} kbps → ${rate_kBps} KB/s"
 
     toxiproxy-cli toxic update --toxicName bandwidth_upstream   --attribute rate="$rate_kBps" "$PROXY_NAME" || true
     toxiproxy-cli toxic update --toxicName bandwidth_downstream --attribute rate="$rate_kBps" "$PROXY_NAME" || true
     toxiproxy-cli inspect video
 
-    sleep 1
-
     count=$((count + 1))
     if [[ $count -ge $MAX_STEPS ]]; then
         echo "[INFO] Reached ${MAX_STEPS} updates — stopping early."
         break
     fi
-done
+done < <(tail -n +2 "$CSV_FILE")
 
 echo "[DONE] Completed all updates from ${CSV_FILE}"
 
